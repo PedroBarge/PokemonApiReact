@@ -9,10 +9,25 @@ function App() {
     <>
       <p>----------------------------------------------</p>
       <h1>Pokemon Api + React</h1>
-      <Button name="bulbasaur" handleClick={() => getPokemonFromApi(1)} />
-      <Button name="ivysaur" handleClick={() => getPokemonFromApi(2)} />
-      <Button name="venusaur" handleClick={() => getPokemonFromApi(3)} />
-      <Button name="charmander" handleClick={() => getPokemonFromApi(4)} />
+      <Button
+        name="bulbasaur"
+        handleClick={() => {
+          getPokemonFromApi(1);
+          
+        }}
+      />
+      <Button name="charmander" handleClick={() => {
+          getPokemonFromApi(4);
+          
+        }} />
+      <Button name="squirtle" handleClick={() => {
+          getPokemonFromApi(7);
+          
+        }}/>
+      <Button name="metapod" handleClick={() => {
+          getPokemonFromApi(11);
+          
+        }} />
       <Button
         name="random"
         handleClick={() => getPokemonFromApi(randomized())}
@@ -20,25 +35,33 @@ function App() {
 
       <div className="main">
         <div className="pokemonPicture"></div>
-        <div className="pokemonName"></div>
         <div className="pokemonType"></div>
+        <div className="pokemonName"></div>
       </div>
     </>
   );
 }
+function clear() {
+  let picture = document.getElementsByClassName("pokemonPicture");
+  let type = document.getElementsByClassName("pokemonType");
+  let name = document.getElementsByClassName("pokemonName");
+
+  picture.innerHTML = "";
+  type.innerHTML = "";
+  name.innerHTML = "";
+}
 
 async function getPokemonFromApi(id) {
+  clear();
   const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}/`);
   const data = await response.json();
-  console.log(data.name);
 
-  if(response.ok){
+  if (response.ok) {
     const name = document.createElement("div");
     name.innerHTML = data.name;
     const whitePageDiv = document.querySelector(".pokemonName");
     whitePageDiv.innerHTML = "";
     whitePageDiv.appendChild(name);
-  
   }
   getPokemonPicture(id);
   getPokemonType(id);
@@ -66,10 +89,14 @@ async function getPokemonType(id) {
 
   if (response.ok) {
     const type = document.createElement("div");
-    type.innerHTML = data.types[0].type.name;
-    const whitePageDiv = document.querySelector(".pokemonType");
-    whitePageDiv.innerHTML = "";
-    whitePageDiv.appendChild(type);
+
+    let type0 = data.types[0].type.name;
+    if (type0 != undefined) {
+      type.innerHTML = type0;
+    }
+    const pokemonType = document.querySelector(".pokemonType");
+    pokemonType.innerHTML = "";
+    pokemonType.appendChild(type);
   } else {
     console.error("Failed to fetch Pokemon type");
   }
